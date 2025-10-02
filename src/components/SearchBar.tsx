@@ -30,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search events with keywords..."
+          placeholder="Ex: Chicago Bulls vs. Atlanta Hawks..."
           placeholderTextColor={'gray'}
           value={searchQuery}
           onChangeText={onSearchQueryChange}
@@ -48,7 +48,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Ionicons name="location" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Enter city short names..."
+          placeholder="Ex: nyc, dha..."
           placeholderTextColor={'gray'}
           value={city}
           onChangeText={onCityChange}

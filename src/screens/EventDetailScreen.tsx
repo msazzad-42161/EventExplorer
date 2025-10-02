@@ -9,6 +9,7 @@ import {
   Linking,
   Dimensions,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -31,7 +32,7 @@ type EventDetailRouteProp = RouteProp<RootStackParamList, 'EventDetail'>;
 type EventDetailNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EventDetail'>;
 
 const { width } = Dimensions.get('window');
-
+const STATUSBAR_HEIGHT = StatusBar.currentHeight
 const EventDetailScreen = () => {
   const route = useRoute<EventDetailRouteProp>();
   const navigation = useNavigation<EventDetailNavigationProp>();
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 50 : 16,
+    paddingTop: STATUSBAR_HEIGHT,
     paddingBottom: 12,
     zIndex: 1000,
   },
@@ -328,7 +329,7 @@ const styles = StyleSheet.create({
   },
   headerImageContainer: {
     width: width,
-    aspectRatio: 1.5,
+    aspectRatio: 1.35,
   },
   headerImage: {
     width: '100%',
@@ -337,6 +338,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+    paddingBottom:100
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -428,7 +430,6 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 12,
     overflow: 'hidden',
   },
   buyButton: {

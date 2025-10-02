@@ -101,6 +101,7 @@ const _layout = LinearTransition.springify().damping(_damping).stiffness(_stiffn
 
   return (
     <SafeAreaView style={styles.container}>
+      {renderHeader()}
       <FlatList
         data={favorites}
         renderItem={renderEventCard}
@@ -109,7 +110,7 @@ const _layout = LinearTransition.springify().damping(_damping).stiffness(_stiffn
           styles.listContent,
           favorites.length === 0 && styles.emptyListContent,
         ]}
-        ListHeaderComponent={renderHeader}
+        // ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmptyState}
         showsVerticalScrollIndicator={false}
       />
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   listContent: {
-    padding: 16,
+    paddingHorizontal: 16,
     paddingBottom: 32,
   },
   emptyListContent: {
@@ -133,8 +134,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 4,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   headerText: {
     fontSize: 16,

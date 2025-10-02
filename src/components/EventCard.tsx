@@ -47,32 +47,23 @@ const EventCard: React.FC<EventCardProps> = ({
   };
 
   return (
-    <TouchableOpacity
-      style={styles.eventCard}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <Image source={{ uri: getEventImage() }} style={styles.eventImage} />
-      
-      <Pressable
-        style={styles.favoriteButton}
-      >
-        <FavouriteHeart handleToggleFavorite={onToggleFavorite} isFavorite={isFavorite}/>
-      </Pressable>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: getEventImage() }} style={styles.image} resizeMode="cover" />
 
-      <View style={styles.eventInfo}>
-        <Text style={styles.eventCategory}>{getEventCategory()}</Text>
-        <Text style={styles.eventName} numberOfLines={2}>
-          {event.name}
-        </Text>
-        <Text style={styles.eventDate}>
-          {formatDate(event.dates.start.localDate)}
-        </Text>
+        <Pressable style={styles.favoriteButton}>
+          <FavouriteHeart handleToggleFavorite={onToggleFavorite} isFavorite={isFavorite} />
+        </Pressable>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.category}>{getEventCategory()}</Text>
+        <Text style={styles.title} numberOfLines={2}>{event.name}</Text>
+        <Text style={styles.date}>{formatDate(event.dates.start.localDate)}</Text>
+        
         <View style={styles.venueRow}>
-          <Ionicons name="location-sharp" size={16} color="#666" style={styles.venueIcon} />
-          <Text style={styles.eventVenue} numberOfLines={1}>
-            {getVenueName()}
-          </Text>
+          <Ionicons name="location-sharp" size={16} color="#999" style={styles.icon} />
+          <Text style={styles.venue} numberOfLines={1}>{getVenueName()}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -80,21 +71,26 @@ const EventCard: React.FC<EventCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  eventCard: {
+  card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 16,
+    borderRadius: 16,
+    marginBottom: 20,
     overflow: 'hidden',
-    elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  eventImage: {
+  imageContainer: {
+    position: 'relative',
     width: '100%',
     height: 200,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#ddd',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
   favoriteButton: {
     position: 'absolute',
@@ -106,38 +102,44 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  eventInfo: {
+  infoContainer: {
     padding: 16,
   },
-  eventCategory: {
+  category: {
     fontSize: 12,
     color: '#007AFF',
     fontWeight: '600',
     textTransform: 'uppercase',
     marginBottom: 4,
+    letterSpacing: 0.5,
   },
-  eventName: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  title: {
+    fontSize: 17,
+    fontWeight: '700',
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 6,
   },
-  eventDate: {
+  date: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
-  },
-  eventVenue: {
-    fontSize: 14,
-    color: '#666',
+    color: '#777',
+    marginBottom: 10,
   },
   venueRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  venueIcon: {
+  icon: {
     marginRight: 6,
+  },
+  venue: {
+    fontSize: 14,
+    color: '#666',
+    flexShrink: 1,
   },
 });
 
