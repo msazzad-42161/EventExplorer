@@ -3,7 +3,6 @@ import React from 'react';
 import {
   View,
   Text,
-  ScrollView,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -21,6 +20,12 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { toggleFavorite } from '../store/slices/favoritesSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
 import FavouriteHeart from '../components/FavouriteHeart';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  useAnimatedScrollHandler,
+  interpolateColor,
+} from 'react-native-reanimated';
 
 type EventDetailRouteProp = RouteProp<RootStackParamList, 'EventDetail'>;
 type EventDetailNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EventDetail'>;
@@ -32,6 +37,8 @@ const EventDetailScreen = () => {
   const navigation = useNavigation<EventDetailNavigationProp>();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector((state) => state.favorites.items);
+
+  const scrollY = useSharedValue(0);
 
   const { eventId } = route.params;
   const { data: event, isLoading, error } = useGetEventByIdQuery(eventId);
@@ -71,6 +78,24 @@ const EventDetailScreen = () => {
       }
     }
   };
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      scrollY.value,
+      [0, 100],
+      ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']
+    );
+
+    return {
+      backgroundColor,
+    };
+  });
 
   if (isLoading) {
     return <LoadingSpinner message="Loading event details..." />;
@@ -128,140 +153,147 @@ const EventDetailScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Event Image with Overlay Buttons */}
-      <View style={styles.headerImageContainer}>
-        {image && (
-          <Image source={{ uri: image }} style={styles.headerImage} />
-        )}
-        
-        {/* Back Button */}
-        <TouchableOpacity 
-          style={styles.backButton}
+    <View style={styles.container}>
+      <Animated.ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
+        {/* Event Image */}
+        <View style={styles.headerImageContainer}>
+          {image && (
+            <Image source={{ uri: image }} style={styles.headerImage} />
+          )}
+        </View>
+
+        {/* Event Info */}
+        <View style={styles.content}>
+          {/* Category Badge */}
+          <View style={styles.categoryContainer}>
+            <Text style={styles.categoryText}>{category}</Text>
+            {genre && <Text style={styles.genreText}> • {genre}</Text>}
+          </View>
+
+          {/* Event Name */}
+          <Text style={styles.eventName}>{event.name}</Text>
+
+          {/* Date & Time */}
+          <View style={styles.infoRow}>
+            <Ionicons name="calendar-outline" size={20} color="#007AFF" />
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoLabel}>Date & Time</Text>
+              <Text style={styles.infoValue}>
+                {formatDate(event.dates.start.localDate)}
+              </Text>
+              {event.dates.start.localTime && (
+                <Text style={styles.infoValue}>
+                  {formatTime(event.dates.start.localTime)}
+                </Text>
+              )}
+            </View>
+          </View>
+
+          {/* Venue */}
+          {venue && (
+            <View style={styles.infoRow}>
+              <Ionicons name="location-outline" size={20} color="#007AFF" />
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoLabel}>Venue</Text>
+                <Text style={styles.infoValue}>{venue.name}</Text>
+                {getVenueAddress() && (
+                  <Text style={styles.infoAddress}>{getVenueAddress()}</Text>
+                )}
+              </View>
+            </View>
+          )}
+
+          {/* Price Range */}
+          {priceRange && (
+            <View style={styles.infoRow}>
+              <Ionicons name="cash-outline" size={20} color="#007AFF" />
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoLabel}>Price Range</Text>
+                <Text style={styles.infoValue}>
+                  {priceRange.currency} {priceRange.min} - {priceRange.max}
+                </Text>
+              </View>
+            </View>
+          )}
+
+          {/* Description */}
+          {(event.info || event.pleaseNote) && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>About This Event</Text>
+              {event.info && <Text style={styles.description}>{event.info}</Text>}
+              {event.pleaseNote && (
+                <View style={styles.noteContainer}>
+                  <Ionicons name="information-circle-outline" size={20} color="#FF9500" />
+                  <Text style={styles.noteText}>{event.pleaseNote}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {/* Map */}
+          {venue?.location && (
+            <View style={styles.section}>
+              <View style={styles.mapHeader}>
+                <Text style={styles.sectionTitle}>Location</Text>
+                <TouchableOpacity onPress={handleOpenMaps}>
+                  <Text style={styles.openMapText}>Open in Maps</Text>
+                </TouchableOpacity>
+              </View>
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: parseFloat(venue.location.latitude),
+                  longitude: parseFloat(venue.location.longitude),
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+                scrollEnabled={true}
+                zoomEnabled={true}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: parseFloat(venue.location.latitude),
+                    longitude: parseFloat(venue.location.longitude),
+                  }}
+                  title={venue.name}
+                  description={getVenueAddress() || undefined}
+                />
+              </MapView>
+            </View>
+          )}
+        </View>
+
+      </Animated.ScrollView>
+                  {/* Buy Tickets Button */}
+                  <TouchableOpacity
+            style={styles.buyButton}
+            onPress={handleBuyTickets}
+          >
+            <Ionicons name="ticket-outline" size={24} color="#fff" />
+            <Text style={styles.buyButtonText}>Buy Tickets</Text>
+          </TouchableOpacity>
+      {/* Animated Header */}
+      <Animated.View style={[styles.header, headerAnimatedStyle]}>
+        <TouchableOpacity
+          style={styles.headerButton}
           onPress={() => navigation.goBack()}
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
-
-        {/* Favorite Button */}
-        <View style={styles.favoriteButton}>
-          <FavouriteHeart 
-            handleToggleFavorite={handleToggleFavorite} 
+        
+        <View style={styles.headerButton}>
+          <FavouriteHeart
+            handleToggleFavorite={handleToggleFavorite}
             isFavorite={isFavorite}
           />
         </View>
-      </View>
-
-      {/* Event Info */}
-      <View style={styles.content}>
-        {/* Category Badge */}
-        <View style={styles.categoryContainer}>
-          <Text style={styles.categoryText}>{category}</Text>
-          {genre && <Text style={styles.genreText}> • {genre}</Text>}
-        </View>
-
-        {/* Event Name */}
-        <Text style={styles.eventName}>{event.name}</Text>
-
-        {/* Date & Time */}
-        <View style={styles.infoRow}>
-          <Ionicons name="calendar-outline" size={20} color="#007AFF" />
-          <View style={styles.infoTextContainer}>
-            <Text style={styles.infoLabel}>Date & Time</Text>
-            <Text style={styles.infoValue}>
-              {formatDate(event.dates.start.localDate)}
-            </Text>
-            {event.dates.start.localTime && (
-              <Text style={styles.infoValue}>
-                {formatTime(event.dates.start.localTime)}
-              </Text>
-            )}
-          </View>
-        </View>
-
-        {/* Venue */}
-        {venue && (
-          <View style={styles.infoRow}>
-            <Ionicons name="location-outline" size={20} color="#007AFF" />
-            <View style={styles.infoTextContainer}>
-              <Text style={styles.infoLabel}>Venue</Text>
-              <Text style={styles.infoValue}>{venue.name}</Text>
-              {getVenueAddress() && (
-                <Text style={styles.infoAddress}>{getVenueAddress()}</Text>
-              )}
-            </View>
-          </View>
-        )}
-
-        {/* Price Range */}
-        {priceRange && (
-          <View style={styles.infoRow}>
-            <Ionicons name="cash-outline" size={20} color="#007AFF" />
-            <View style={styles.infoTextContainer}>
-              <Text style={styles.infoLabel}>Price Range</Text>
-              <Text style={styles.infoValue}>
-                {priceRange.currency} {priceRange.min} - {priceRange.max}
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* Description */}
-        {(event.info || event.pleaseNote) && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>About This Event</Text>
-            {event.info && <Text style={styles.description}>{event.info}</Text>}
-            {event.pleaseNote && (
-              <View style={styles.noteContainer}>
-                <Ionicons name="information-circle-outline" size={20} color="#FF9500" />
-                <Text style={styles.noteText}>{event.pleaseNote}</Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {/* Map */}
-        {venue?.location && (
-          <View style={styles.section}>
-            <View style={styles.mapHeader}>
-              <Text style={styles.sectionTitle}>Location</Text>
-              <TouchableOpacity onPress={handleOpenMaps}>
-                <Text style={styles.openMapText}>Open in Maps</Text>
-              </TouchableOpacity>
-            </View>
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: parseFloat(venue.location.latitude),
-                longitude: parseFloat(venue.location.longitude),
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              scrollEnabled={true}
-              zoomEnabled={true}
-            >
-              <Marker
-                coordinate={{
-                  latitude: parseFloat(venue.location.latitude),
-                  longitude: parseFloat(venue.location.longitude),
-                }}
-                title={venue.name}
-                description={getVenueAddress() || undefined}
-              />
-            </MapView>
-          </View>
-        )}
-
-        {/* Buy Tickets Button */}
-        <TouchableOpacity
-          style={styles.buyButton}
-          onPress={handleBuyTickets}
-        >
-          <Ionicons name="ticket-outline" size={24} color="#fff" />
-          <Text style={styles.buyButtonText}>Buy Tickets</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </Animated.View>
+    </View>
   );
 };
 
@@ -270,37 +302,38 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  scrollView: {
+    flex: 1,
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: Platform.OS === 'ios' ? 50 : 16,
+    paddingBottom: 12,
+    zIndex: 1000,
+  },
+  headerButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:"rgba(0,0,0,0.6)"
+  },
   headerImageContainer: {
-    position: 'relative',
     width: width,
-    aspectRatio:1,
+    aspectRatio: 1.5,
   },
   headerImage: {
     width: '100%',
     height: '100%',
     backgroundColor: '#e0e0e0',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  favoriteButton: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   content: {
     padding: 16,
@@ -394,19 +427,21 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    aspectRatio: 16/9,
+    aspectRatio: 16 / 9,
     borderRadius: 12,
     overflow: 'hidden',
   },
   buyButton: {
+    position:'absolute',
     backgroundColor: '#007AFF',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
     borderRadius: 12,
-    marginTop: 24,
-    marginBottom: 32,
+    bottom:32,
+    left:16,
+    right:16
   },
   buyButtonText: {
     color: '#fff',
