@@ -1,13 +1,16 @@
 // src/components/SearchBar.tsx
-import React from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import {
   View,
   TextInput,
   TouchableOpacity,
   Text,
   StyleSheet,
+  Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -17,15 +20,57 @@ interface SearchBarProps {
   onSearch: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
+export interface SearchBarRef {
+  show: () => void;
+  hide: () => void;
+}
+
+const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(({
   searchQuery,
   city,
   onSearchQueryChange,
   onCityChange,
   onSearch,
-}) => {
+}, ref) => {
+  const insets = useSafeAreaInsets();
+  const animatedValue = useRef(new Animated.Value(1)).current;
+  const isVisible = useRef(true);
+
+  useImperativeHandle(ref, () => ({
+    show: () => {
+      if (!isVisible.current) {
+        isVisible.current = true;
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      }
+    },
+    hide: () => {
+      if (isVisible.current) {
+        isVisible.current = false;
+        Animated.timing(animatedValue, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      }
+    },
+  }));
   return (
-    <View style={styles.searchContainer}>
+    <Animated.View 
+    style={[styles.searchContainer, {
+      paddingTop: insets.top,
+      opacity: animatedValue,
+      transform: [{
+        translateY: animatedValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-200, 0],
+        })
+      }]
+    }]} 
+    pointerEvents={isVisible.current ? 'auto' : 'none'}>
       <View style={styles.searchInputContainer}>
         <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
@@ -66,12 +111,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Ionicons name="search" size={20} color="#fff" style={styles.buttonIcon} />
         <Text style={styles.searchButtonText}>Search</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   searchContainer: {
+    position:'absolute',
+    top:0,
+    left:0,
+    right:0,
+    zIndex:1000,
     backgroundColor: '#fff',
     padding: 16,
     paddingTop: 8,
@@ -114,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchBar;
+export default React.memo(SearchBar);
