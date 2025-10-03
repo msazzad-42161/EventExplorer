@@ -16,7 +16,7 @@ import EventCard from '../components/EventCard';
 import EmptyState from '../components/EmptyState';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInDown, FadeInUp, FadeOut, FadeOutUp, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp, FadeOut, FadeOutUp, LinearTransition, SequencedTransition } from 'react-native-reanimated';
 
 type FavoritesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -25,7 +25,8 @@ const FavoritesScreen = () => {
 const _stiffness = 120
 const _entering = FadeInDown.springify().damping(_damping).stiffness(_stiffness).duration(350)
 const _exiting = FadeOut.duration(200)
-const _layout = LinearTransition.springify().damping(_damping).stiffness(_stiffness).duration(300)
+// const _layout = LinearTransition.springify().damping(_damping).stiffness(_stiffness).duration(300)
+const _layout = SequencedTransition.duration(500)
   const navigation = useNavigation<FavoritesScreenNavigationProp>();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector((state) => state.favorites.items);
