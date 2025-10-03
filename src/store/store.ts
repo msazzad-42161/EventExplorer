@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { ticketmasterApi } from './api/ticketmasterApi';
 import favoritesReducer from './slices/favoritesSlice';
+import themeReducer from './slices/themeSlice';
 
 export const store = configureStore({
   reducer: {
     [ticketmasterApi.reducerPath]: ticketmasterApi.reducer,
     favorites: favoritesReducer,
+    theme:themeReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
