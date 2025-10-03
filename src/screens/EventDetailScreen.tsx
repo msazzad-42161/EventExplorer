@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -25,13 +25,16 @@ import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
   interpolateColor,
+  runOnJS,
 } from 'react-native-reanimated';
+import FAB from '../components/FAB';
 
 type EventDetailRouteProp = RouteProp<RootStackParamList, 'EventDetail'>;
 type EventDetailNavigationProp = NativeStackNavigationProp<RootStackParamList, 'EventDetail'>;
 
 const { width } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = StatusBar.currentHeight
+
 const EventDetailScreen = () => {
   const route = useRoute<EventDetailRouteProp>();
   const navigation = useNavigation<EventDetailNavigationProp>();
@@ -39,6 +42,10 @@ const EventDetailScreen = () => {
   const favorites = useAppSelector((state) => state.favorites.items);
 
   const scrollY = useSharedValue(0);
+  const lastScrollY = useSharedValue(0);
+
+  // states
+  const [expanded, setExpanded] = useState(false);
 
   const { eventId } = route.params;
   const { data: event, isLoading, error } = useGetEventByIdQuery(eventId);
@@ -78,10 +85,30 @@ const EventDetailScreen = () => {
       }
     }
   };
+  const handleExpansion = (expansion:boolean)=>{
+    'worklet';
+    setExpanded(expansion)
+  }
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
+      const currentScrollY = event.contentOffset.y;
+      
+      // Determine scroll direction and update expanded state
+      if (currentScrollY > lastScrollY.value && currentScrollY > 50) {
+        // Scrolling down and past threshold
+        if (!expanded) {
+          runOnJS(setExpanded)(true);
+        }
+      } else if (currentScrollY < lastScrollY.value && currentScrollY < 50) {
+        // Scrolling up and below threshold
+        if (expanded) {
+          runOnJS(setExpanded)(false);
+        }
+      }
+      
+      scrollY.value = currentScrollY;
+      lastScrollY.value = currentScrollY;
     },
   });
 
@@ -269,14 +296,15 @@ const EventDetailScreen = () => {
         </View>
 
       </Animated.ScrollView>
-                  {/* Buy Tickets Button */}
-                  <TouchableOpacity
-            style={styles.buyButton}
-            onPress={handleBuyTickets}
-          >
-            <Ionicons name="ticket-outline" size={24} color="#fff" />
-            <Text style={styles.buyButtonText}>Buy Tickets</Text>
-          </TouchableOpacity>
+      
+      {/* FAB Component */}
+      <FAB
+        expanded={expanded}
+        icon='ticket'
+        label='Buy Tickets'
+        onPress={handleBuyTickets}
+      />
+      
       {/* Animated Header */}
       <Animated.View style={[styles.header, headerAnimatedStyle]}>
         <TouchableOpacity
