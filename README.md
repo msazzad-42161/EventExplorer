@@ -1,4 +1,4 @@
-# 🎉 Event Explorer - React Native App
+# 🎉 Event Explorer - React Native App (Lyxa Test Project)
 
 A modern, feature-rich mobile application for discovering and exploring live events (music, sports, arts, etc.) using the Ticketmaster Discovery API. Built with React Native, TypeScript, and Redux Toolkit.
 
@@ -33,9 +33,9 @@ A modern, feature-rich mobile application for discovering and exploring live eve
 - **State Management**: Redux Toolkit
 - **Data Fetching**: RTK Query
 - **Local Storage**: MMKV (react-native-mmkv)
-- **Maps**: react-native-maps with Google Maps
-- **Animations**: React Native Reanimated 3
-- **Icons**: @expo/vector-icons
+- **Maps**: react-native-maps
+- **Animations**: React Native Reanimated 4
+- **Icons**: @expo/vector-icons (Ionicons)
 
 ## 📋 Prerequisites
 
@@ -50,8 +50,8 @@ A modern, feature-rich mobile application for discovering and exploring live eve
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd event-explorer
+git clone https://github.com/msazzad-42161/EventExplorer.git
+cd EventExplorer
 ```
 
 ### 2. Install Dependencies
@@ -68,7 +68,7 @@ yarn install
 1. Visit [Ticketmaster Developer Portal](https://developer.ticketmaster.com/)
 2. Sign up and create an app to get your API key
 3. Open `src/store/api/ticketmasterApi.ts`
-4. Replace `YOUR_API_KEY_HERE` with your actual API key:
+4. Replace with your actual API key:
 
 ```typescript
 const TICKETMASTER_API_KEY = 'your_actual_api_key_here';
@@ -96,31 +96,18 @@ const TICKETMASTER_API_KEY = 'your_actual_api_key_here';
 
 > **Note**: iOS maps work without additional configuration.
 
-### 4. Configure Reanimated
 
-Ensure `babel.config.js` includes the Reanimated plugin:
-
-```javascript
-module.exports = function(api) {
-  api.cache(true);
-  return {
-    presets: ['babel-preset-expo'],
-    plugins: ['react-native-reanimated/plugin'],
-  };
-};
-```
-
-### 5. Run the App
+### 4. Run the App
 
 ```bash
 # Start the development server
 npx expo start
 
-# Run on iOS simulator
-npx expo start --ios
+# Run on iOS simulator or device
+npx expo run:ios --device
 
 # Run on Android emulator
-npx expo start --android
+npx expo run:android --device
 
 # Clear cache if needed
 npx expo start -c
@@ -129,16 +116,19 @@ npx expo start -c
 ## 📁 Project Structure
 
 ```
+App.tsx
 src/
 ├── components/          # Reusable UI components
+|   ├── EmptyState.tsx
 │   ├── EventCard.tsx
 │   ├── SearchBar.tsx
+│   ├── FAB.tsx
 │   ├── LoadingSpinner.tsx
-│   ├── EmptyState.tsx
-│   └── ThemeToggle.tsx
+│   └── FavouriteHeart.tsx
 ├── screens/            # Screen components
 │   ├── HomeScreen.tsx
 │   ├── FavoritesScreen.tsx
+    ├── PreferencesScreen.tsx
 │   └── EventDetailScreen.tsx
 ├── navigation/         # Navigation configuration
 │   └── AppNavigator.tsx
@@ -154,8 +144,6 @@ src/
 │   └── event.types.ts
 ├── constants/         # App constants
 │   └── colors.ts
-├── hooks/            # Custom hooks
-│   └── useTheme.ts
 └── utils/            # Utility functions
     └── storage.ts
 ```
@@ -179,7 +167,7 @@ src/
 - Type-safe navigation with TypeScript
 
 ### Animations
-- **Reanimated 3** for 60fps smooth animations
+- **Reanimated 4** for smooth animations
 - Animated sticky header with spring physics
 - Smooth theme transitions
 
@@ -196,11 +184,23 @@ const isFavorite = favorites.some(fav => fav.id === eventId);
 
 ### Theme System
 ```typescript
-// Use in any component
-const { colors, isDark, toggle } = useTheme();
+const dispatch = useAppDispatch();
+  const currentTheme = useAppSelector((state) => state.theme.mode);
+  const colors = useAppSelector((state) => state.theme.colors);
+  const customColors = useAppSelector((state) => state.theme.customColors);
 
-// Toggle theme
-toggle();
+  const handleThemeSelect = useCallback((theme: 'light' | 'dark' | 'custom') => {
+    dispatch(setTheme(theme));
+  }, [dispatch]);
+
+  const handleColorChange = useCallback((key: keyof Colors, value: string) => {
+    dispatch(setCustomColor({ key, value }));
+  }, [dispatch]);
+
+  const handleResetColors = useCallback(() => {
+    dispatch(resetCustomColors());
+  }, [dispatch]);
+
 ```
 
 ### Infinite Scroll Pagination
@@ -228,15 +228,16 @@ While the app uses hardcoded API keys for simplicity, in production you should u
 
 ```bash
 # .env
-TICKETMASTER_API_KEY=your_key_here
-GOOGLE_MAPS_API_KEY=your_key_here
+BASE_URL=""
+TICKETMASTER_API_KEY=""
+GOOGLE_MAPS_API_KEY=""
 ```
 
 ## 🚧 Known Issues & Limitations
 
 - **Pagination Reset**: Searching resets to page 0
 - **Map Interaction**: Map in detail screen has limited interaction (by design)
-- **Offline Mode**: No offline support (future enhancement)
+- **Offline Mode**: No offline support
 - **Image Loading**: No shimmer loading for images yet
 
 ## 🎯 Future Enhancements
@@ -272,10 +273,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_twitter)
+Md. Sazzadul Islam - [@msazzadi](https://x.com/msazzadi)
 
-Project Link: [https://github.com/yourusername/event-explorer](https://github.com/yourusername/event-explorer)
+Project Link: [https://github.com/msazzad-42161/EventExplorer](https://github.com/msazzad-42161/EventExplorer)
 
 ---
 
-Made with ❤️ using React Native and TypeScript
+Made with ❤️ using React Native, TypeScript & Reanimated
