@@ -272,17 +272,23 @@ const EventDetailScreen = () => {
                   <Text style={[styles.openMapText, { color: colors.primary }]}>Open in Maps</Text>
                 </TouchableOpacity>
               </View>
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: parseFloat(venue.location.latitude),
-                  longitude: parseFloat(venue.location.longitude),
-                  latitudeDelta: 0.01,
-                  longitudeDelta: 0.01,
-                }}
-                scrollEnabled={true}
-                zoomEnabled={true}
-              >
+              <View style={[styles.mapContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <MapView
+                  style={styles.map}
+                  initialRegion={{
+                    latitude: parseFloat(venue.location.latitude),
+                    longitude: parseFloat(venue.location.longitude),
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                  scrollEnabled={true}
+                  zoomEnabled={true}
+                  showsUserLocation={false}
+                  showsMyLocationButton={false}
+                  showsCompass={false}
+                  showsScale={false}
+                  mapType="standard"
+                >
                 <Marker
                   coordinate={{
                     latitude: parseFloat(venue.location.latitude),
@@ -291,7 +297,8 @@ const EventDetailScreen = () => {
                   title={venue.name}
                   description={getVenueAddress() || undefined}
                 />
-              </MapView>
+                </MapView>
+              </View>
             </View>
           )}
         </View>
@@ -437,16 +444,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 6,
   },
   openMapText: {
     fontSize: 14,
     fontWeight: '600',
   },
+  mapContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+  },
   map: {
     width: '100%',
     aspectRatio: 16 / 9,
-    overflow: 'hidden',
   },
   buyButton: {
     position:'absolute',
