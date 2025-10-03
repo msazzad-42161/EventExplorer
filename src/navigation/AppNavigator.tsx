@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
 import { useAppSelector } from '../store/hooks';
+import PreferencesScreen from '../screens/PreferencesScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -69,6 +70,17 @@ function TabNavigator() {
             alignItems: 'center',
             justifyContent: 'center',
           },
+        }}
+      />
+      <Tab.Screen
+        name="Preferences"
+        component={PreferencesScreen}
+        options={{
+          tabBarLabel: 'Preferences',
+          // You can add icon here later:
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="color-wand" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

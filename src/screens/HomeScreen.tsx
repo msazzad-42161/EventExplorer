@@ -65,12 +65,7 @@ const HomeScreen = () => {
     },
     [dispatch]
   );
-  const handleToggleTheme = useCallback(
-    () => {
-      dispatch(toggleTheme());
-    },
-    [dispatch]
-  );
+
 
   const handleLoadMore = useCallback(() => {
     if (hasMore && !isFetching) {
@@ -199,12 +194,6 @@ const HomeScreen = () => {
           />
         }
       />
-      <Pressable style={{position:'absolute', bottom:16,right:16}} onPress={()=>{
-        handleToggleTheme()
-        console.log("chitty chitty bang bang")
-      }}>
-      <Ionicons name='moon' size={32} color={'pink'}/>
-      </Pressable>
     </SafeAreaView>
   );
 };
