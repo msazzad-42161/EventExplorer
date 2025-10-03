@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useAppSelector } from '../store/hooks';
 
 interface EmptyStateProps {
   icon?: keyof typeof Ionicons.glyphMap;
@@ -13,11 +14,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   message,
 }) => {
+  const colors = useAppSelector((state) => state.theme.colors);
+
   return (
     <View style={styles.container}>
-      <Ionicons name={icon} size={64} color="#ccc" />
-      {title && <Text style={styles.title}>{title}</Text>}
-      <Text style={styles.message}>{message}</Text>
+      <Ionicons name={icon} size={64} color={colors.textTertiary} />
+      {title && <Text style={[styles.title, { color: colors.text }]}>{title}</Text>}
+      <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
     </View>
   );
 };
@@ -33,13 +36,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     textAlign: 'center',
   },
   message: {
     marginTop: 8,
     fontSize: 16,
-    color: '#999',
     textAlign: 'center',
     lineHeight: 22,
   },

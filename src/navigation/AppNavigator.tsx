@@ -17,17 +17,20 @@ const Tab = createBottomTabNavigator<TabParamList>();
 // Bottom Tab Navigator
 function TabNavigator() {
   const favoritesCount = useAppSelector((state) => state.favorites.items.length);
+  const colors = useAppSelector((state) => state.theme.colors);
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textTertiary,
         tabBarStyle: {
           paddingBottom: 5,
           paddingTop: 5,
           height: 60,
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -56,7 +59,7 @@ function TabNavigator() {
           ),
           tabBarBadge: favoritesCount > 0 ? favoritesCount : undefined,
           tabBarBadgeStyle: {
-            backgroundColor: '#FF3B30',
+            backgroundColor: colors.accent,
             color: '#fff',
             fontSize: 10,
             fontWeight: 'bold',
@@ -74,13 +77,15 @@ function TabNavigator() {
 
 // Root Stack Navigator
 export default function AppNavigator() {
+  const colors = useAppSelector((state) => state.theme.colors);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: true,
           headerStyle: {
-            backgroundColor: '#007AFF',
+            backgroundColor: colors.primary,
           },
           headerTintColor: '#fff',
           headerTitleStyle: {

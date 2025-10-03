@@ -40,6 +40,7 @@ const EventDetailScreen = () => {
   const navigation = useNavigation<EventDetailNavigationProp>();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector((state) => state.favorites.items);
+  const colors = useAppSelector((state) => state.theme.colors);
 
   const scrollY = useSharedValue(0);
   const lastScrollY = useSharedValue(0);
@@ -130,11 +131,11 @@ const EventDetailScreen = () => {
 
   if (error || !event) {
     return (
-      <View style={styles.errorContainer}>
-        <Ionicons name="alert-circle-outline" size={64} color="#FF3B30" />
-        <Text style={styles.errorText}>Failed to load event details</Text>
+      <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
+        <Ionicons name="alert-circle-outline" size={64} color={colors.error} />
+        <Text style={[styles.errorText, { color: colors.text }]}>Failed to load event details</Text>
         <TouchableOpacity
-          style={styles.retryButton}
+          style={[styles.retryButton, { backgroundColor: colors.primary }]}
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.retryButtonText}>Go Back</Text>
@@ -180,7 +181,7 @@ const EventDetailScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Animated.ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -190,7 +191,7 @@ const EventDetailScreen = () => {
         {/* Event Image */}
         <View style={styles.headerImageContainer}>
           {image && (
-            <Image source={{ uri: image }} style={styles.headerImage} />
+            <Image source={{ uri: image }} style={[styles.headerImage, { backgroundColor: colors.border }]} />
           )}
         </View>
 
@@ -198,23 +199,23 @@ const EventDetailScreen = () => {
         <View style={styles.content}>
           {/* Category Badge */}
           <View style={styles.categoryContainer}>
-            <Text style={styles.categoryText}>{category}</Text>
-            {genre && <Text style={styles.genreText}> • {genre}</Text>}
+            <Text style={[styles.categoryText, { color: colors.categoryBadge }]}>{category}</Text>
+            {genre && <Text style={[styles.genreText, { color: colors.textSecondary }]}> • {genre}</Text>}
           </View>
 
           {/* Event Name */}
-          <Text style={styles.eventName}>{event.name}</Text>
+          <Text style={[styles.eventName, { color: colors.text }]}>{event.name}</Text>
 
           {/* Date & Time */}
           <View style={styles.infoRow}>
-            <Ionicons name="calendar-outline" size={20} color="#007AFF" />
+            <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             <View style={styles.infoTextContainer}>
-              <Text style={styles.infoLabel}>Date & Time</Text>
-              <Text style={styles.infoValue}>
+              <Text style={[styles.infoLabel, { color: colors.textTertiary }]}>Date & Time</Text>
+              <Text style={[styles.infoValue, { color: colors.text }]}>
                 {formatDate(event.dates.start.localDate)}
               </Text>
               {event.dates.start.localTime && (
-                <Text style={styles.infoValue}>
+                <Text style={[styles.infoValue, { color: colors.text }]}>
                   {formatTime(event.dates.start.localTime)}
                 </Text>
               )}
@@ -224,12 +225,12 @@ const EventDetailScreen = () => {
           {/* Venue */}
           {venue && (
             <View style={styles.infoRow}>
-              <Ionicons name="location-outline" size={20} color="#007AFF" />
+              <Ionicons name="location-outline" size={20} color={colors.primary} />
               <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>Venue</Text>
-                <Text style={styles.infoValue}>{venue.name}</Text>
+                <Text style={[styles.infoLabel, { color: colors.textTertiary }]}>Venue</Text>
+                <Text style={[styles.infoValue, { color: colors.text }]}>{venue.name}</Text>
                 {getVenueAddress() && (
-                  <Text style={styles.infoAddress}>{getVenueAddress()}</Text>
+                  <Text style={[styles.infoAddress, { color: colors.textSecondary }]}>{getVenueAddress()}</Text>
                 )}
               </View>
             </View>
@@ -238,10 +239,10 @@ const EventDetailScreen = () => {
           {/* Price Range */}
           {priceRange && (
             <View style={styles.infoRow}>
-              <Ionicons name="cash-outline" size={20} color="#007AFF" />
+              <Ionicons name="cash-outline" size={20} color={colors.primary} />
               <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>Price Range</Text>
-                <Text style={styles.infoValue}>
+                <Text style={[styles.infoLabel, { color: colors.textTertiary }]}>Price Range</Text>
+                <Text style={[styles.infoValue, { color: colors.text }]}>
                   {priceRange.currency} {priceRange.min} - {priceRange.max}
                 </Text>
               </View>
@@ -251,12 +252,12 @@ const EventDetailScreen = () => {
           {/* Description */}
           {(event.info || event.pleaseNote) && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>About This Event</Text>
-              {event.info && <Text style={styles.description}>{event.info}</Text>}
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>About This Event</Text>
+              {event.info && <Text style={[styles.description, { color: colors.textSecondary }]}>{event.info}</Text>}
               {event.pleaseNote && (
-                <View style={styles.noteContainer}>
-                  <Ionicons name="information-circle-outline" size={20} color="#FF9500" />
-                  <Text style={styles.noteText}>{event.pleaseNote}</Text>
+                <View style={[styles.noteContainer, { backgroundColor: colors.warning + '20' }]}>
+                  <Ionicons name="information-circle-outline" size={20} color={colors.warning} />
+                  <Text style={[styles.noteText, { color: colors.warning }]}>{event.pleaseNote}</Text>
                 </View>
               )}
             </View>
@@ -266,9 +267,9 @@ const EventDetailScreen = () => {
           {venue?.location && (
             <View style={styles.section}>
               <View style={styles.mapHeader}>
-                <Text style={styles.sectionTitle}>Location</Text>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Location</Text>
                 <TouchableOpacity onPress={handleOpenMaps}>
-                  <Text style={styles.openMapText}>Open in Maps</Text>
+                  <Text style={[styles.openMapText, { color: colors.primary }]}>Open in Maps</Text>
                 </TouchableOpacity>
               </View>
               <MapView
@@ -328,7 +329,6 @@ const EventDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   scrollView: {
     flex: 1,
@@ -361,7 +361,6 @@ const styles = StyleSheet.create({
   headerImage: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#e0e0e0',
   },
   content: {
     padding: 16,
@@ -374,18 +373,15 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 14,
-    color: '#007AFF',
     fontWeight: '600',
     textTransform: 'uppercase',
   },
   genreText: {
     fontSize: 14,
-    color: '#666',
   },
   eventName: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 24,
     lineHeight: 34,
   },
@@ -399,19 +395,16 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: '#999',
     textTransform: 'uppercase',
     fontWeight: '600',
     marginBottom: 4,
   },
   infoValue: {
     fontSize: 16,
-    color: '#333',
     fontWeight: '500',
   },
   infoAddress: {
     fontSize: 14,
-    color: '#666',
     marginTop: 2,
   },
   section: {
@@ -421,17 +414,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 12,
   },
   description: {
     fontSize: 16,
-    color: '#666',
     lineHeight: 24,
   },
   noteContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFF9E6',
     padding: 12,
     borderRadius: 8,
     marginTop: 12,
@@ -439,7 +429,6 @@ const styles = StyleSheet.create({
   noteText: {
     flex: 1,
     fontSize: 14,
-    color: '#FF9500',
     marginLeft: 8,
     lineHeight: 20,
   },
@@ -451,7 +440,6 @@ const styles = StyleSheet.create({
   },
   openMapText: {
     fontSize: 14,
-    color: '#007AFF',
     fontWeight: '600',
   },
   map: {
@@ -461,7 +449,6 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     position:'absolute',
-    backgroundColor: '#007AFF',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -485,12 +472,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: '#333',
     marginTop: 16,
     marginBottom: 24,
   },
   retryButton: {
-    backgroundColor: '#007AFF',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,

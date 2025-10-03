@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Event } from '../types/event.types';
 import FavouriteHeart from './FavouriteHeart';
+import { useAppSelector } from '../store/hooks';
 
 interface EventCardProps {
   event: Event;
@@ -24,6 +25,7 @@ const EventCard: React.FC<EventCardProps> = ({
   onPress,
   onToggleFavorite,
 }) => {
+  const colors = useAppSelector((state) => state.theme.colors);
   const getEventImage = () => {
     return event.images?.[0]?.url || 'https://via.placeholder.com/300x200?text=No+Image';
   };
@@ -46,8 +48,8 @@ const EventCard: React.FC<EventCardProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
-      <View style={styles.imageContainer}>
+    <TouchableOpacity style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadow }]} onPress={onPress} activeOpacity={0.9}>
+      <View style={[styles.imageContainer, { backgroundColor: colors.border }]}>
         <Image source={{ uri: getEventImage() }} style={styles.image} resizeMode="cover" />
 
         <Pressable style={styles.favoriteButton}>
@@ -56,13 +58,13 @@ const EventCard: React.FC<EventCardProps> = ({
       </View>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.category}>{getEventCategory()}</Text>
-        <Text style={styles.title} numberOfLines={2}>{event.name}</Text>
-        <Text style={styles.date}>{formatDate(event.dates.start.localDate)}</Text>
+        <Text style={[styles.category, { color: colors.categoryBadge }]}>{getEventCategory()}</Text>
+        <Text style={[styles.title, { color: colors.text }]} numberOfLines={2}>{event.name}</Text>
+        <Text style={[styles.date, { color: colors.textSecondary }]}>{formatDate(event.dates.start.localDate)}</Text>
         
         <View style={styles.venueRow}>
-          <Ionicons name="location-sharp" size={16} color="#999" style={styles.icon} />
-          <Text style={styles.venue} numberOfLines={1}>{getVenueName()}</Text>
+          <Ionicons name="location-sharp" size={16} color={colors.textTertiary} style={styles.icon} />
+          <Text style={[styles.venue, { color: colors.textSecondary }]} numberOfLines={1}>{getVenueName()}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -71,11 +73,9 @@ const EventCard: React.FC<EventCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
     borderRadius: 16,
     marginBottom: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     height: 200,
-    backgroundColor: '#ddd',
   },
   image: {
     width: '100%',
@@ -111,7 +110,6 @@ const styles = StyleSheet.create({
   },
   category: {
     fontSize: 12,
-    color: '#007AFF',
     fontWeight: '600',
     textTransform: 'uppercase',
     marginBottom: 4,
@@ -120,12 +118,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#333',
     marginBottom: 6,
   },
   date: {
     fontSize: 14,
-    color: '#777',
     marginBottom: 10,
   },
   venueRow: {
@@ -137,7 +133,6 @@ const styles = StyleSheet.create({
   },
   venue: {
     fontSize: 14,
-    color: '#666',
     flexShrink: 1,
   },
 });

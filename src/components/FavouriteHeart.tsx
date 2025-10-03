@@ -10,6 +10,7 @@ import Animated, {
   interpolateColor,
   useDerivedValue,
 } from 'react-native-reanimated';
+import { useAppSelector } from '../store/hooks';
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 
@@ -20,6 +21,7 @@ const FavouriteHeart = ({
   handleToggleFavorite: () => void;
   isFavorite: boolean;
 }) => {
+  const colors = useAppSelector((state) => state.theme.colors);
   const scale = useSharedValue(1);
   const animatedColor = useSharedValue(isFavorite ? 1 : 0);
 
@@ -33,7 +35,7 @@ const FavouriteHeart = ({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
-      color: interpolateColor(animatedColor.value, [0, 1], ['white', 'red']),
+      color: interpolateColor(animatedColor.value, [0, 1], ['white', colors.accent]),
     };
   });
 

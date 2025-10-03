@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   RefreshControl,
+  Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,6 +18,8 @@ import EventCard from '../components/EventCard';
 import SearchBar, { SearchBarRef } from '../components/SearchBar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
+import { Ionicons } from '@expo/vector-icons';
+import { toggleTheme } from '../store/slices/themeSlice';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -27,6 +30,7 @@ const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector((state) => state.favorites.items);
+  const colors = useAppSelector((state) => state.theme.colors);
   const insets = useSafeAreaInsets();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,6 +62,12 @@ const HomeScreen = () => {
   const handleToggleFavorite = useCallback(
     (event: Event) => {
       dispatch(toggleFavorite(event));
+    },
+    [dispatch]
+  );
+  const handleToggleTheme = useCallback(
+    () => {
+      dispatch(toggleTheme());
     },
     [dispatch]
   );
@@ -146,9 +156,9 @@ const HomeScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
+    <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]} edges={['bottom', 'left', 'right']}>
 
-<SearchBar
+      <SearchBar
         ref={searchBarRef}
         searchQuery={searchQuery}
         city={city}
@@ -189,6 +199,12 @@ const HomeScreen = () => {
           />
         }
       />
+      <Pressable style={{position:'absolute', bottom:16,right:16}} onPress={()=>{
+        handleToggleTheme()
+        console.log("chitty chitty bang bang")
+      }}>
+      <Ionicons name='moon' size={32} color={'pink'}/>
+      </Pressable>
     </SafeAreaView>
   );
 };

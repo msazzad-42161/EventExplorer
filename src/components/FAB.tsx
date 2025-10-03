@@ -13,6 +13,7 @@ import Animated, {
   FadeOutRight,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
+import { useAppSelector } from '../store/hooks';
 
 type FABProps = {
   expanded?: boolean; // controls whether text is shown
@@ -27,6 +28,7 @@ const FAB: React.FC<FABProps> = ({
   icon = "ticket",
   onPress,
 }) => {
+  const colors = useAppSelector((state) => state.theme.colors);
   const width = useSharedValue(expanded ? 160 : 56);
 
   React.useEffect(() => {
@@ -38,7 +40,7 @@ const FAB: React.FC<FABProps> = ({
   }));
 
   return (
-    <Animated.View style={[styles.fab, animatedStyle]}>
+    <Animated.View style={[styles.fab, { backgroundColor: colors.primary, shadowColor: colors.shadow }, animatedStyle]}>
       <TouchableOpacity
         style={styles.fabContent}
         activeOpacity={0.8}
@@ -58,8 +60,6 @@ const styles = StyleSheet.create({
     right: 16,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "#007AFF",
-    shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },

@@ -30,6 +30,7 @@ const _layout = SequencedTransition.duration(500)
   const navigation = useNavigation<FavoritesScreenNavigationProp>();
   const dispatch = useAppDispatch();
   const favorites = useAppSelector((state) => state.favorites.items);
+  const colors = useAppSelector((state) => state.theme.colors);
 
   const handleEventPress = (eventId: string) => {
     navigation.navigate('EventDetail', { eventId });
@@ -77,15 +78,15 @@ const _layout = SequencedTransition.duration(500)
 
     return (
       <View style={styles.header}>
-        <Text style={styles.headerText}>
+        <Text style={[styles.headerText, { color: colors.text }]}>
           {favorites.length} {favorites.length === 1 ? 'Event' : 'Events'} Saved
         </Text>
         <TouchableOpacity
-          style={styles.clearButton}
+          style={[styles.clearButton, { backgroundColor: colors.surface, borderColor: colors.accent }]}
           onPress={handleClearAll}
         >
-          <Ionicons name="trash-outline" size={18} color="#FF3B30" />
-          <Text style={styles.clearButtonText}>Clear All</Text>
+          <Ionicons name="trash-outline" size={18} color={colors.accent} />
+          <Text style={[styles.clearButtonText, { color: colors.accent }]}>Clear All</Text>
         </TouchableOpacity>
       </View>
     );
@@ -100,7 +101,7 @@ const _layout = SequencedTransition.duration(500)
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {renderHeader()}
       <FlatList
         data={favorites}
@@ -121,7 +122,6 @@ const _layout = SequencedTransition.duration(500)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   listContent: {
     paddingHorizontal: 16,
@@ -140,23 +140,19 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
   },
   clearButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#FFF',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FF3B30',
   },
   clearButtonText: {
     marginLeft: 6,
     fontSize: 14,
     fontWeight: '600',
-    color: '#FF3B30',
   },
 });
 
