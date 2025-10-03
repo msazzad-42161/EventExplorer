@@ -1,4 +1,3 @@
-// src/components/LoadingSpinner.tsx
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 

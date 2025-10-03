@@ -1,4 +1,3 @@
-// src/types/event.types.ts
 
 export interface EventImage {
   url: string;

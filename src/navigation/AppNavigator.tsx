@@ -9,12 +9,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import EventDetailScreen from '../screens/EventDetailScreen';
+import { useAppSelector } from '../store/hooks';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 // Bottom Tab Navigator
 function TabNavigator() {
+  const favoritesCount = useAppSelector((state) => state.favorites.items.length);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -51,6 +54,18 @@ function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart" size={size} color={color} />
           ),
+          tabBarBadge: favoritesCount > 0 ? favoritesCount : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: '#FF3B30',
+            color: '#fff',
+            fontSize: 10,
+            fontWeight: 'bold',
+            minWidth: 18,
+            height: 18,
+            borderRadius: 9,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
         }}
       />
     </Tab.Navigator>

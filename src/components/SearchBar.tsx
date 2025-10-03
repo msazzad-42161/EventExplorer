@@ -1,4 +1,3 @@
-// src/components/SearchBar.tsx
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import {
   View,

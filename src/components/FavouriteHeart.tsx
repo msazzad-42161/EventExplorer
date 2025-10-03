@@ -33,7 +33,7 @@ const FavouriteHeart = ({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
-      color: interpolateColor(animatedColor.value, [0, 1], ['gray', 'red']),
+      color: interpolateColor(animatedColor.value, [0, 1], ['white', 'red']),
     };
   });
 

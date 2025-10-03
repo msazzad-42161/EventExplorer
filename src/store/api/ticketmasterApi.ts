@@ -1,4 +1,3 @@
-// src/store/api/ticketmasterApi.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Event, EventsResponse, SearchParams } from '../../types/event.types';
 

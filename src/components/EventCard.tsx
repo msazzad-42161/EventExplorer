@@ -1,4 +1,3 @@
-// src/components/EventCard.tsx
 import React from 'react';
 import {
   View,

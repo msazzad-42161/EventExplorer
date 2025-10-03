@@ -1,4 +1,3 @@
-// src/screens/EventDetailScreen.tsx
 import React from 'react';
 import {
   View,
