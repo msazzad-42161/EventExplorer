@@ -431,6 +431,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
     lineHeight: 20,
+    fontFamily: 'monospace',
   },
   mapHeader: {
     flexDirection: 'row',
