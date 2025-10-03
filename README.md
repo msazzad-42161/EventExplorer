@@ -3,8 +3,113 @@
 A modern, feature-rich mobile application for discovering and exploring live events (music, sports, arts, etc.) using the Ticketmaster Discovery API. Built with React Native, TypeScript, and Redux Toolkit.
 
 ## 📸 Screenshots
+<div align="center">
 
-[Add your screenshots here]
+### Dark Mode
+<table>
+  <tr>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-16-56-580_com.anonymous.EventExplorer.jpg" alt="Home Screen" width="250"/>
+      <br />
+      <b>Events Screen</b>
+      <br />
+      <sub>Search & Browse Events</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-17-10-068_com.anonymous.EventExplorer.jpg" alt="Event Details" width="250"/>
+      <br />
+      <b>Events Screen</b>
+      <br />
+      <sub>Hidden Search Bar On Scroll</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-17-17-207_com.anonymous.EventExplorer.jpg" alt="Favorites" width="250"/>
+      <br />
+      <b>Favorites</b>
+      <br />
+      <sub>Saved Events</sub>
+    </td>
+  </tr>
+</table>
+
+### Lite Mode
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-18-44-864_com.anonymous.EventExplorer.jpg" alt="Home Screen" width="250"/>
+      <br />
+      <b>Events Screen</b>
+      <br />
+      <sub>Lite Mode Search(by search keys)</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-18-59-469_com.anonymous.EventExplorer.jpg" alt="Event Details" width="250"/>
+      <br />
+      <b>Events Screen</b>
+      <br />
+      <sub>Lite Mode Search(by city names)</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-18-09-807_com.anonymous.EventExplorer.jpg" alt="Favorites" width="250"/>
+      <br />
+      <b>Events Screen</b>
+      <br />
+      <sub>Hidden Search Bar On Scroll</sub>
+    </td>
+  </tr>
+</table>
+
+### Key Features
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-17-24-902_com.anonymous.EventExplorer.jpg"  width="250"/>
+      <br />
+      <b>Preferences Screen</b>
+      <br />
+      <sub>Theme switching(Lite, Dark and Custom)</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-21-12-604_com.anonymous.EventExplorer.jpg"  width="250"/>
+      <br />
+      <b>Preferences Screen</b>
+      <br />
+      <sub>Custom Theme</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-42-34-529_com.anonymous.EventExplorer.jpg" width="250"/>
+      <br />
+      <b>Event Details</b>
+      <br />
+      <sub>Dark theme</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-42-48-713_com.anonymous.EventExplorer.jpg" width="250"/>
+      <br />
+      <b>Event Details</b>
+      <br />
+      <sub>Light theme</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-45-00-754_com.anonymous.EventExplorer.jpg" width="250"/>
+      <br />
+      <b>Event Details</b>
+      <br />
+      <sub>MapView(react-native-maps)</sub>
+    </td>
+    <td align="center">
+      <img src="./assets/screenshots/Screenshot_2025-10-03-23-21-25-316_com.anonymous.EventExplorer.jpg" width="250"/>
+      <br />
+      <b>Favorites Screen</b>
+      <br />
+      <sub>When there's no favorite event</sub>
+    </td>
+  </tr>
+</table>
+
+</div>
 
 ## ✨ Features
 
